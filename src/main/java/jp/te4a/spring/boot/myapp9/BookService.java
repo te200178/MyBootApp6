@@ -9,34 +9,33 @@ import org.springframework.stereotype.Service;
 
 
 
-
-
 @Service
 public class BookService {
   @Autowired
-  BookRepository JpaRepository;
+  BookRepository bookRepository;
   
   public BookForm create(BookForm bookForm) {
-   BookBean bookBean = new BookBean();
-   BeanUtils.copyProperties(bookForm, bookBean);
-   JpaRepository.save(bookBean);
-   return bookForm;
-  }
+
+	   BookBean bookBean = new BookBean();
+	   BeanUtils.copyProperties(bookForm, bookBean);
+	   bookRepository.save(bookBean);
+	   return bookForm;
+	  }
   
   public BookForm update(BookForm bookForm) {
 	    BookBean bookBean = new BookBean();
 	    BeanUtils.copyProperties(bookForm, bookBean);
-	    JpaRepository.save(bookBean);
+	    bookRepository.save(bookBean);
 	    return bookForm;
 	  }
   
-	  public void delete(Integer BookBean) { 
+	  public void delete(Integer id) { 
 		  
-		  JpaRepository.deleteById(BookBean);
+		  bookRepository.deleteById(id);
 	  }
 	  
 	  public List<BookForm> findAll() {
-	    List<BookBean> beanList = JpaRepository.findAll();
+	    List<BookBean> beanList = bookRepository.findAll();
 	    List<BookForm> formList = new ArrayList<BookForm>();
 	    for(BookBean bookBean: beanList) {
 	      BookForm bookForm = new BookForm();
@@ -46,13 +45,15 @@ public class BookService {
 	    return formList;
 	    }
 	  
-	  public BookForm findById(Integer BookBean) {
-		    Optional<BookBean> opt = JpaRepository.findById(BookBean);
-		    opt.ifPresent(book -> {
-			    	
-		    });
+	  public BookForm findOne(Integer id) {
+		    
+		    Optional<BookBean> opt = bookRepository.findById(id);
 		    BookForm bookForm = new BookForm();
-		    BeanUtils.copyProperties(BookBean, bookForm);
+		    opt.ifPresent(book -> {
+			    BeanUtils.copyProperties(book, bookForm);	
+		    });
+
+
 		    return bookForm;
 	  }
 }
